@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>이름</th>
+        <th>주민번호</th>
+        <th>주소</th>
+    </tr>
+    </thead>
+    <tbody id="memberList">
+    <tr>
+        <td>홍길동</td>
+        <td>주민번호</td>
+        <td>집 주소</td>
+    </tr>
+    </tbody>
+</table>
+<button id="btn_getList">데이터 가져오기</button>
+<script>
+    document.querySelector("#btn_getList").addEventListener("click", getList);
+
+    function getList() {
+        let HTML = "";
+
+        $.ajax({
+            url: "/members",
+            type: "GET",
+            success: function (data) {
+                if (data.message == "SUCCESS") {
+                    data.content.forEach(function (v, i) {
+                        HTML += "<tr><td>" + v.name + "</td><td>" + v.jumin + "</td><td>" + v.address + "</td></tr>";
+                    });
+                    document.getElementById("memberList").innerHTML = HTML;
+                } else {
+                    alert(data.message);
+                }
+            }, error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            }
+        });
+    }
+</script>
+</body>
+</html>
